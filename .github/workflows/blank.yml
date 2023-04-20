@@ -1,0 +1,65 @@
+import tkinter as tk
+from tkinter import ttk
+import re
+
+class BasketballRatingsCalculator(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Basketball Ratings Calculator")
+        self.geometry("600x400")
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.box_score_label = ttk.Label(self, text="Box Score:")
+        self.box_score_label.grid(column=0, row=0, sticky=tk.W, padx=5, pady=5)
+
+        self.box_score_text = tk.Text(self, wrap=tk.WORD)
+        self.box_score_text.grid(column=0, row=1, padx=5, pady=5)
+
+        self.calculate_button = ttk.Button(self, text="Calculate Ratings", command=self.calculate_ratings)
+        self.calculate_button.grid(column=0, row=2, pady=10)
+
+    def extract_stats(self, box_score_data):
+        # Regex pattern to match the player stats line
+        pattern = r"\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+\t\d+/\d+\t\d+/\d+\t\d+/\d+"
+        stats_lines = re.findall(pattern, box_score_data)
+
+        stats = []
+        for line in stats_lines:
+            player_stats = [int(x) for x in re.findall(r"\d+", line)]
+            stats.append(player_stats)
+
+        return stats
+
+    def calculate_ratings(self):
+        box_score_data = self.box_score_text.get("1.0", tk.END)
+        player_stats = self.extract_stats(box_score_data)
+
+        # Your code for parsing and calculating ratings goes here.
+        # This is just an example of how you might calculate the ratings.
+        # Replace this with your own implementation based on the provided formulas.
+        def example_calculate_offensive_rating(player_stat):
+            # Replace this with the actual formula for calculating Offensive Rating
+            return player_stat[0] + player_stat[1]
+
+        def example_calculate_defensive_rating(player_stat):
+            # Replace this with the actual formula for calculating Defensive Rating
+            return player_stat[2] + player_stat[3]
+
+        ratings = []
+        for stat in player_stats:
+            offensive_rating = example_calculate_offensive_rating(stat)
+            defensive_rating = example_calculate_defensive_rating(stat)
+            ratings.append((offensive_rating, defensive_rating))
+
+        for i, rating in enumerate(ratings):
+            print(f"Player {i + 1} - Offensive Rating: {rating[0]}, Defensive Rating: {rating[1]}")
+
+def main():
+    app = BasketballRatingsCalculator()
+    app.mainloop()
+
+if __name__ == "__main__":
+    main()
